@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppRoutingModule } from './app-routing/app-routing.module'; 
+import { MatDialogModule } from '@angular/material/dialog';
 import 'hammerjs';
 
 // Components
@@ -27,6 +28,7 @@ import { ContactComponent } from './contact/contact.component';
 import { DishService } from './services/dish.service';
 import { PromotionService } from './services/promotion.service';
 import { LeaderService } from './services/leader.service';
+import { LoginComponent } from './login/login.component';
 
 
 @NgModule({
@@ -38,7 +40,8 @@ import { LeaderService } from './services/leader.service';
     FooterComponent,
     HomeComponent,
     AboutComponent,
-    ContactComponent
+    ContactComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -51,13 +54,17 @@ import { LeaderService } from './services/leader.service';
     MatCardModule,
     MatButtonModule, 
     MatIconModule, 
-    FontAwesomeModule, 
+    FontAwesomeModule,
+    MatDialogModule 
   ],
   providers: [
     DishService,
     PromotionService, 
     LeaderService
   ],
-  bootstrap: [AppComponent]
+  entryComponents:[
+    LoginComponent,
+  ]
+,  bootstrap: [AppComponent]
 })
 export class AppModule { }

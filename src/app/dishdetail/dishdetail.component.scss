@@ -1,0 +1,20 @@
+$lt-gray: #ddd;
+$background-dark: #512DA8;
+$background-light: #9575CD;
+$background-pale: #D1C4E9;
+$background-moredark: #4527A0;
+
+.button-color{
+    background: $background-dark;
+}
+
+.text{
+    color: $lt-gray;
+}
+.commentform-size{
+    width: 100%;
+}
+
+.mat-slider {
+    width: 300px;
+  }

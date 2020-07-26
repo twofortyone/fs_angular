@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, inject } from '@angular/core';
 import { Params, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { switchMap } from 'rxjs/operators';
@@ -49,7 +49,8 @@ export class DishdetailComponent implements OnInit {
   constructor(private dishService: DishService, 
     private route: ActivatedRoute,
     private location: Location,
-    private cfBuilder: FormBuilder) { 
+    private cfBuilder: FormBuilder,
+    @Inject('BaseURL') private BaseURL) { 
 
       this.createForm();
     }

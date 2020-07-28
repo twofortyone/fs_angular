@@ -34,7 +34,7 @@
     </div>
   </div>
 
-  <div fxFlex fxFlexOffset="20px" class="form-size">
+  <div fxFlex fxFlexOffset="20px" class="form-size" *ngIf="formIsShown">
     <h3>Send us your Feedback</h3>
     <p>{{ feedbackForm.value | json }} {{feedbackForm.status | json}}</p>
 
@@ -52,8 +52,8 @@
       </p>
       <p>
         <mat-form-field class="half-width">
-          <input matInput formControlName="telnumber" placeholder="Tel. Number" type="tel" pattern="[0-9]*" required>
-          <mat-error *ngIf="formErrors.telnumber">{{formErrors.telnumber}}</mat-error>
+          <input matInput formControlName="telnum" placeholder="Tel. Number" type="tel" pattern="[0-9]*" required>
+          <mat-error *ngIf="formErrors.telnum">{{formErrors.telnumb}}</mat-error>
         </mat-form-field>
         <mat-form-field class="half-width">
           <input matInput formControlName="email" placeholder="Email" type="email" email required>
@@ -85,6 +85,28 @@
       <button type="submit" mat-button [disabled]="feedbackForm.invalid">Submit</button>
 
     </form>
+  </div>
 
+  <div *ngIf="resServ" [@expand] [hidden]="formIsShown">
+    <h2>Your Submission</h2>
+      <mat-list >
+        <mat-list-item>First Name: {{resServ.firstname}}</mat-list-item>
+        <mat-list-item>First Name: {{resServ.lastname}}</mat-list-item>
+        <mat-list-item>Tel. Number: {{resServ.telnum}}</mat-list-item>
+        <mat-list-item>E-mail: {{resServ.email}}</mat-list-item>  
+        <mat-list-item>Contact You?: {{resServ.agree}}</mat-list-item>  
+        <mat-list-item>How?: {{resServ.contacttype}}</mat-list-item>  
+        <mat-list-item>Feedback: {{resServ.message}}</mat-list-item>    
+    </mat-list>
+  </div>
+
+  <div fxFlex [hidden]="formIsShown || resServ || ErrMess">
+    <h4>Submitting Form</h4>
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="ErrMess" >
+    <h2>Error</h2>
+    <h4>{{ErrMess}}</h4>
   </div>
 </div>

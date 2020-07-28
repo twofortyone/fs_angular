@@ -2,39 +2,44 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { faPhone, faFax, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Feedback, ContactType } from '../shared/feedback';
-import { flyInOut } from '../animations/app.animation';
-
+import { flyInOut, expand } from '../animations/app.animation';
+import { FeedbackService } from '../services/feedback.service';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss'],
-  host:{
+  host: {
     '[@flyInOut]': 'true',
     'style': 'display:block;'
   },
-  animations:[
-    flyInOut()
+  animations: [
+    flyInOut(),
+    expand()
   ]
 })
 export class ContactComponent implements OnInit {
 
   // icons 
-  telephone=  faPhone;
+  telephone = faPhone;
   fax = faFax;
-  envelope= faEnvelope;
+  envelope = faEnvelope;
 
   // form variables 
   feedbackForm: FormGroup;
   feedback: Feedback;
   contactType = ContactType;
   @ViewChild('fform') feedbackFormDirective;
+  ErrMess: string;
+  formIsShown: boolean = true;
+  resServ: Feedback;
 
   formErrors = {
-    'firstname':'',
-    'lastname':'',
-    'telnumber': '',
-    'email':''
+    'firstname': '',
+    'lastname': '',
+    'telnum': '',
+    'email': ''
   };
 
   validationMessages = {
@@ -48,7 +53,7 @@ export class ContactComponent implements OnInit {
       'minlength': 'Last name must be at least 2 characters',
       'maxlength': 'Last name cannot be more than 25 characters'
     },
-    'telnumber': {
+    'telnum': {
       'required': 'Tel. number is required.',
       'pattern': 'Tel. number must contain only numbers'
     },
@@ -58,7 +63,8 @@ export class ContactComponent implements OnInit {
     }
   };
 
-  constructor(private fb: FormBuilder) { 
+  constructor(private fb: FormBuilder,
+    private fbService: FeedbackService) {
 
     this.createForm();
   }
@@ -66,11 +72,11 @@ export class ContactComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  createForm(){
+  createForm() {
     this.feedbackForm = this.fb.group({
       firstname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)]],
       lastname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)]],
-      telnumber: [0, [Validators.required, Validators.pattern]],
+      telnum: [0, [Validators.required, Validators.pattern]],
       email: ['', [Validators.required, Validators.email]],
       agree: false,
       contacttype: 'None',
@@ -78,7 +84,7 @@ export class ContactComponent implements OnInit {
     });
 
     this.feedbackForm.valueChanges
-    .subscribe(data => this.onValueChanged(data));
+      .subscribe(data => this.onValueChanged(data));
 
     this.onValueChanged(); // reset parameters
   }
@@ -103,17 +109,22 @@ export class ContactComponent implements OnInit {
     }
   }
 
-  onSubmit(){
+  onSubmit() {
     this.feedback = this.feedbackForm.value;
     console.log(this.feedback);
+    this.fbService.submitFeedback(this.feedback)
+      .subscribe(feedback => this.resServ = feedback,
+        errmess => { this.feedback = null; this.ErrMess = <any>errmess });
     this.feedbackForm.reset({
       firstname: '',
-      lastname:'',
-      telnumber: 0,
+      lastname: '',
+      telnum: 0,
       agree: false,
       contacttype: 'None',
       message: ''
     });
     this.feedbackFormDirective.reset();
+    this.formIsShown = false;
+    setTimeout(() => { this.formIsShown = true; }, 5000);
   }
 }
